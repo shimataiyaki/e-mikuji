@@ -131,7 +131,13 @@
             margin: 20px 0 10px;
             text-shadow: 2px 2px 0 #f0e0d0;
         }
-
+　　　　#binary-suffix {
+    　　　　font-size: 30px;           /* 小さく */
+    　　　　letter-spacing: normal;
+    　　　　margin-left: 8px;
+    　　　　color: #7a5a4a;
+    　　　　font-weight: normal;
+　　　　}
         .waiting-text {
             font-family: '游明朝', 'Yu Mincho', serif;
             font-size: 28px;
@@ -212,7 +218,10 @@
 
     <!-- 抽選結果表示スペース -->
     <div class="result-area">
-        <div id="binary-display">----</div>
+        <div id="binary-display">
+    　　<span id="binary-number">----</span>
+   　　 <span id="binary-suffix"></span>
+　　</div>
         <div id="waiting-message" class="waiting-text"></div>
     </div>
 
@@ -223,9 +232,9 @@
 
     <!-- フッター -->
     <div class="footer">
-        <a href="https://github.com/shimataiyaki/Binary-omikuji" target="_blank">GitHub</a> ／
+        <a href="https://github.com/shimataiyaki/binary-omikuji" target="_blank">GitHub</a> ／
         <a href="https://note.com/shimataiyaki" target="_blank">note</a> ／
-        <a href="#" target="_blank">テクニカルサマリー</a>
+        <a href="https://github.com/shimataiyaki/binary-omikuji#readme" target="_blank">テクニカルサマリー</a>
         <br><br>
         <span style="opacity:0.6;">© 2026 Shimataiyaki</span>
     </div>
@@ -297,6 +306,7 @@
             timeoutId = setTimeout(() => {
                 // 結果を表示
                 binaryDisplay.textContent = selectedBinary;
+                binarySuffix.textContent = '(2)';   // ← 二進数であることを強調
                 waitingMsg.textContent = '';   // 「抽選中…」を消す
 
                 // 札を再有効化
