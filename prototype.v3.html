@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二進数おみくじ</title> 
+<!--Version3.0(2026.4.12)-->
+    <style>
+        /* 全体リセット・ベース */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: '游明朝', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
+            color: #3a2c1f;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ----- ヘッダー ----- */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 56px;
+            font-weight: 600;
+            color: #ad241f;        /* 朱色系 */
+            letter-spacing: 6px;
+            writing-mode: horizontal-tb;  /* 横書きでも十分和風 */
+            font-family: '游明朝', 'Yu Mincho', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* サブ見出し */
+        .subtitle {
+            font-size: 22px;
+            color: #8b5e3c;
+            margin: 10px 0 30px;
+            border-bottom: 2px solid #e0b8a8;
+            padding-bottom: 12px;
+            display: inline-block;
+        }
+
+        /* ----- おみくじ札グリッド ----- */
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px 30px;
+            margin: 20px 0 50px;
+            max-width: 1200px;
+        }
+
+        /* 札のスタイル */
+        .omikuji-card {
+            width: 90px;
+            height: 140px;
+            background-color: #c84b3f;      /* 朱色 */
+            color: #f9e076;                 /* 金色文字 */
+            border-radius: 6px 6px 4px 4px;
+            box-shadow: 
+                2px 2px 6px rgba(0,0,0,0.2),    /* 右下 */
+                -2px 2px 6px rgba(0,0,0,0.1),   /* 左下 */
+                0px 4px 6px rgba(0,0,0,0.15);   /* 下方向 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-family: '游明朝', 'Yu Mincho', serif;
+            user-select: none;
+            /* 上部には影をつけない（三辺のみ） */
+        }
+
+        /* ホバーで浮き上がる */
+        .omikuji-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 
+                4px 4px 8px rgba(0,0,0,0.25),
+                -4px 4px 8px rgba(0,0,0,0.15),
+                0px 8px 10px rgba(0,0,0,0.2);
+        }
+
+        /* クリック時（待機中など）は見た目を少し変える */
+        .omikuji-card.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+            filter: grayscale(0.3);
+            transform: translateY(2px);
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+        }
+
+        /* ----- 抽選結果表示エリア ----- */
+        .result-area {
+            text-align: center;
+            margin: 20px 0 40px;
+            min-height: 160px;
+        }
+
+        #binary-display {
+            font-family: 'Courier New', monospace;
+            font-size: 90px;
+            font-weight: bold;
+            letter-spacing: 20px;
+            color: #2c3e4e;
+            margin: 20px 0 10px;
+            text-shadow: 2px 2px 0 #f0e0d0;
+        }
+
+        .waiting-text {
+            font-family: '游明朝', 'Yu Mincho', serif;
+            font-size: 28px;
+            color: #a75b4f;
+            margin: 30px 0;
+            letter-spacing: 4px;
+        }
+
+        /* 案内文 */
+        .guide-text {
+            font-size: 18px;
+            color: #5a4a3e;
+            background: #faf0e8;
+            padding: 16px 30px;
+            border-radius: 40px;
+            margin: 30px 0 50px;
+            border-left: 6px solid #c84b3f;
+            display: inline-block;
+        }
+
+        /* ----- フッター ----- */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f6e5d;
+            font-size: 16px;
+        }
+
+        .footer a {
+            color: #b34e4a;
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: 500;
+            border-bottom: 1px dotted #c84b3f;
+        }
+
+        .footer a:hover {
+            border-bottom: 1px solid #c84b3f;
+        }
+
+        /* レスポンシブ：札サイズ調整 */
+        @media (max-width: 800px) {
+            .omikuji-card {
+                width: 70px;
+                height: 110px;
+                font-size: 18px;
+            }
+            .header h1 {
+                font-size: 40px;
+            }
+            #binary-display {
+                font-size: 60px;
+                letter-spacing: 12px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .cards-grid {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- ヘッダー -->
+    <div class="header">
+        <h1>二進数おみくじ</h1>
+    </div>
+
+    <!-- 見出し -->
+    <div class="subtitle">おみくじを引く</div>
+
+    <!-- おみくじ札 10枚（1列に並べる） -->
+    <div class="cards-grid" id="cardsGrid">
+        <!-- JavaScriptで10枚生成することも可能だが、静的に記述 -->
+    </div>
+
+    <!-- 抽選結果表示スペース -->
+    <div class="result-area">
+        <div id="binary-display">----</div>
+        <div id="waiting-message" class="waiting-text"></div>
+    </div>
+
+    <!-- 案内文 -->
+    <div class="guide-text">
+        ▶ 表示された数字を部員に見せて、おみくじの紙を受け取ってください。
+    </div>
+
+    <!-- フッター -->
+    <div class="footer">
+        <a href="https://github.com/shimataiyaki/Binary-omikuji" target="_blank">GitHub</a> ／
+        <a href="https://note.com/shimataiyaki" target="_blank">note</a> ／
+        <a href="#" target="_blank">テクニカルサマリー</a>
+        <br><br>
+        <span style="opacity:0.6;">© 2026 Shimataiyaki</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // ----- 設定 -----
+        const BINARY_LIST = [
+            "0000", "0001", "0010", "0011",
+            "0100", "0101", "0110", "0111",
+            "1000", "1001", "1010", "1011",
+            "1100", "1101", "1110", "1111"
+        ];
+
+        const WAIT_TIME = 2500; // 2.5秒
+        const CARD_COUNT = 10;   // 10枚表示
+
+        // DOM要素
+        const cardsGrid = document.getElementById('cardsGrid');
+        const binaryDisplay = document.getElementById('binary-display');
+        const waitingMsg = document.getElementById('waiting-message');
+
+        let isDrawing = false;      // 抽選中フラグ
+        let timeoutId = null;
+
+        // ----- 札を10枚生成 -----
+        function buildCards() {
+            cardsGrid.innerHTML = '';
+            for (let i = 0; i < CARD_COUNT; i++) {
+                const card = document.createElement('div');
+                card.className = 'omikuji-card';
+                card.textContent = 'おみくじ';
+                card.setAttribute('data-index', i);
+                card.addEventListener('click', onCardClick);
+                cardsGrid.appendChild(card);
+            }
+        }
+
+        // ----- 札クリック時の処理 -----
+        function onCardClick(e) {
+            const card = e.currentTarget;
+            // 抽選中なら何もしない
+            if (isDrawing) return;
+
+            // 抽選開始
+            startDrawing(card);
+        }
+
+        // ----- 抽選開始 -----
+        function startDrawing(clickedCard) {
+            isDrawing = true;
+
+            // 全札を無効化（disabledクラス付与）
+            const allCards = document.querySelectorAll('.omikuji-card');
+            allCards.forEach(card => card.classList.add('disabled'));
+
+            // 表示を待機状態に
+            binaryDisplay.textContent = '';
+            waitingMsg.textContent = '抽選中・・・';
+
+            // 抽選結果を事前に決定
+            const randomIndex = Math.floor(Math.random() * BINARY_LIST.length);
+            const selectedBinary = BINARY_LIST[randomIndex];
+
+            // タイマーセット
+            timeoutId = setTimeout(() => {
+                // 結果を表示
+                binaryDisplay.textContent = selectedBinary;
+                waitingMsg.textContent = '';   // 「抽選中…」を消す
+
+                // 札を再有効化
+                allCards.forEach(card => card.classList.remove('disabled'));
+                isDrawing = false;
+                timeoutId = null;
+            }, WAIT_TIME);
+        }
+
+        // ----- 初期表示：二進数は初期値「----」、待機メッセージは空 -----
+        function initializeDisplay() {
+            binaryDisplay.textContent = '----';
+            waitingMsg.textContent = '';
+        }
+
+        // ----- フッターのリンク先は適宜差し替えてください -----
+        // (必要に応じてURLをセット)
+        function setFooterLinks() {
+            // GitHub / note / テクニカルサマリー のaタグを取得してhref設定も可能
+            // ここでは仮置き
+        }
+
+        // 初期化実行
+        buildCards();
+        initializeDisplay();
+
+        // 念のため、ページアンロード時にタイマーをクリア
+        window.addEventListener('beforeunload', function() {
+            if (timeoutId) clearTimeout(timeoutId);
+        });
+
+    })();
+</script>
+</body>
+</html>
