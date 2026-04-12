@@ -55,4 +55,4 @@
 - おみくじ結果の集計機能（Google Apps Script連携）
 
 ## 7. 謝辞 / リスペクト
-- 本作品のUIは「恋みくじ v3」[https://koi-mikuji.omikuji-do.com/v3/]へのリスペクトに基づき、独自に実装したものです。
+- 本作品のUIは「恋みくじ v3」[https://koi-mikuji.omikuji-do.com/v3/] へのリスペクトに基づき、独自に実装したものです。
