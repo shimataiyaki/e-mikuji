@@ -122,17 +122,11 @@ const randomIndex = Math.floor(Math.random() * BINARY_LIST.length);
 - 乱数生成には Math.random() を使用。エンターテインメント用途のため、疑似乱数で十分と判断。
 - 16 種類の二進数は 等確率。重み付けは行わず、公平な抽選を実現。
 
-## 5. パフォーマンス計測（Lighthouse）
+## 5. パフォーマンス設計
 
-| 指標 | 計測値 | 評価 |
-| :--- | :--- | :--- |
-| First Contentful Paint (FCP) | 0.8 秒 | 🟢 良好 |
-| Largest Contentful Paint (LCP) | 1.2 秒 | 🟢 良好 |
-| Time to Interactive (TTI) | 1.2 秒 | 🟢 良好 |
-| Total Blocking Time (TBT) | 0 ミリ秒 | 🟢 理想的 |
-
-- 外部依存は Google Fonts（display=swap 適用）のみ。広告・トラッキングスクリプトは一切排除。
-- すべてのリソースは静的ファイルであり、CDN（GitHub Pages）から高速配信。
+- **外部依存の最小化**: Google Fonts（`display=swap` 適用）のみ。広告・トラッキングスクリプトは一切排除。
+- **レンダリング最適化**: `transform` と `box-shadow` のみを遷移対象とし、Composite Layer での描画を促進。
+- **静的ホスティング**: GitHub Pages による CDN 配信で、初回ロードを高速化。
 
 ## 6. アクセシビリティ対応
 
