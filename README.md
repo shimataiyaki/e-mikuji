@@ -39,7 +39,7 @@
 - Defined 16 types of binary numbers from `0000` to `1111` in an array.
 - **Anti-spam**: Disabled the button during the selection process and implemented a 2.5-second wait effect using `setTimeout`.
 
-### 5.3 UI/UX (Homage to Love Fortune Telling)
+### 5.3 UI/UX (Homage to Koi mikuji: Love Fortune Telling)
 - **Card Design**: Achieved vertical text and hover animations using only CSS. Used `writing-mode: vertical-rl`.
 - **Responsive Design**: Used Flexbox to ensure cards wrap and center on mobile devices.
 
