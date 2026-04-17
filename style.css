@@ -176,7 +176,7 @@ body {
 .omikuji-card {
     width: 90px;
     height: 140px;
-    background-color: #c84b3f;
+    background-color: #ad241f;
     color: #f9e076;
     border-radius: 6px 6px 4px 4px;
     box-shadow: 
@@ -252,7 +252,7 @@ body {
     padding: 16px 30px;
     border-radius: 40px;
     margin: 30px 0 50px;
-    border-left: 6px solid #c84b3f;
+    border-left: 6px solid #ad241f;
     display: inline-block;
     scroll-margin-top: 100px; /* 固定ヘッダーに隠れないように */
 }
@@ -265,14 +265,14 @@ body {
     font-size: 16px;
 }
 .footer a {
-    color: #b34e4a;
+    color: #ad241f;
     text-decoration: none;
     margin: 0 12px;
     font-weight: 500;
-    border-bottom: 1px dotted #c84b3f;
+    border-bottom: 1px dotted #ad241f;
 }
 .footer a:hover {
-    border-bottom: 1px solid #c84b3f;
+    border-bottom: 1px solid #ad241f;
 }
 
 /* レスポンシブ */
