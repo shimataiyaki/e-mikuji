@@ -27,7 +27,7 @@
 }
 
 body {
-    font-family: 'M PLUS 1p', -apple-system, BlinkMacSystemFont, sans-serif;
+     font-family: '游明朝', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.8;
