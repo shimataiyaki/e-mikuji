@@ -4,49 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二進数おみくじ</title>
-    <!-- 外部CSS -->
+    <!-- M PLUS 1p -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- スタイルシート -->
     <link rel="stylesheet" href="style.css">
-    <!-- ファビコン（ユーザーサイトルートから配信） -->
-<link rel="icon" type="image/x-icon" href="https://shimataiyaki.github.io/favicon.ico">
-<link rel="shortcut icon" type="image/x-icon" href="https://shimataiyaki.github.io/favicon.ico">
-<link rel="apple-touch-icon" href="https://shimataiyaki.github.io/favicon.ico">
+    <!-- ファビコン -->
+    <link rel="icon" type="image/x-icon" href="https://shimataiyaki.github.io/favicon.ico">
 </head>
 <body>
 
-    <!-- ▼ 固定ヘッダー ▼ -->
-    <header class="site-header">
-        <div class="header-container">
-            <div class="site-title">
-                <a href="./">二進数おみくじ</a>
+<!-- ===== 固定ヘッダー（全幅・常時ハンバーガー） ===== -->
+<header class="site-header">
+    <div class="header-container">
+        <a href="./" class="site-title">二進数おみくじ</a>
+        
+        <!-- ハンバーガーボタン（常時表示） -->
+        <button class="menu-toggle" id="menuToggle" aria-label="メニュー">
+            <span></span><span></span><span></span>
+        </button>
+        
+        <!-- 全幅ナビメニュー -->
+        <ul class="nav-menu" id="navMenu">
+            <div class="nav-menu-inner">
+                <li><a href="#howto">遊び方</a></li>
+                <li><a href="https://note.com/shimataiyaki" target="_blank" rel="noopener">note</a></li>
+                <li><a href="https://github.com/shimataiyaki/binary-omikuji" target="_blank" rel="noopener">GitHub</a></li>
             </div>
-            
-            <!-- ハンバーガーボタン（モバイル表示） -->
-            <button class="menu-toggle" id="menuToggle" aria-label="メニューを開く" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <!-- ナビゲーションメニュー -->
-            <nav class="site-nav" id="navMenu">
-                <ul>
-                    <li><a href="#">遊び方</a></li> /
-                    <li><a href="https://note.com/shimataiyaki" target="_blank" rel="noopener">note</a></li> /
-                    <li><a href="https://github.com/shimataiyaki/binary-omikuji" target="_blank" rel="noopener">GitHub</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+        </ul>
+    </div>
+</header>
 
-    <!-- 既存のメインコンテンツ（変更なし） -->
+<!-- ===== メインコンテンツ ===== -->
+<main class="app-main">
     <div class="container">
-        <!-- ヘッダー（旧h1はサイトタイトルと重複するため削除。代わりにサブタイトルを残す） -->
         <div class="subtitle">おみくじを引く</div>
 
         <!-- おみくじ札 10枚 -->
         <div class="cards-grid" id="cardsGrid"></div>
 
-        <!-- 抽選結果表示スペース -->
+        <!-- 抽選結果表示エリア -->
         <div class="result-area">
             <div id="binary-display">
                 <span id="binary-number">----</span>
@@ -55,18 +53,18 @@
             <div id="waiting-message" class="waiting-text"></div>
         </div>
 
-        <!-- 案内文（遊び方アンカー） -->
+        <!-- 案内文（シンプルに左ボーダーのみ） -->
         <div id="howto" class="guide-text">
             ▶ 表示された数字を部員に見せて、おみくじの紙を受け取ってください。
         </div>
 
         <!-- フッター -->
-        <footer class="footer">
-            <span style="opacity:0.6;">© 2026 Shimataiyaki</span>
+        <footer class="app-footer">
+            © 2026 Shimataiyaki
         </footer>
     </div>
+</main>
 
-    <!-- 外部JavaScript -->
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
