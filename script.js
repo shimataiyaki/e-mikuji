@@ -9,7 +9,7 @@
         "1100", "1101", "1110", "1111"
     ];
     const WAIT_TIME = 2500;
-    const CARD_COUNT = 10;
+    const CARD_COUNT = 16;
 
     const cardsGrid = document.getElementById('cardsGrid');
     const binaryNumber = document.getElementById('binary-number');
