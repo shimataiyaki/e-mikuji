@@ -1,6 +1,6 @@
 /* ============================================
    style.css - 二進数おみくじ 最終版
-   16枚札・リセットボタン・リンクなし
+   固定ヘッダー + 16枚札 + リセットボタン
    ============================================ */
 
 * {
@@ -25,12 +25,124 @@ body {
     color: var(--text-color);
     line-height: 1.8;
     font-weight: 400;
+    padding-top: 5rem;            /* 固定ヘッダー分 */
     margin: 0;
-    padding: 2rem 1.5rem;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* ----- 固定ヘッダー（復活） ----- */
+.site-header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-color);
+    border-bottom: 3px solid var(--accent-color);
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-title {
+    font-family: '游明朝', 'Yu Mincho', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.site-title:hover {
+    color: var(--accent-color);
+}
+
+/* ハンバーガーボタン */
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 32px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.menu-toggle span {
+    width: 100%;
+    height: 3px;
+    background: var(--accent-color);
+    transition: all 0.3s;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -7px);
+}
+
+/* ナビメニュー */
+.nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    margin: 0;
+    list-style: none;
+    z-index: 999;
+}
+
+.nav-menu.show {
+    display: block;
+}
+
+.nav-menu-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.nav-menu li {
+    list-style: none;
+}
+
+.nav-menu a {
+    font-family: '游明朝', 'Yu Mincho', serif;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1.1rem;
+    padding: 0.2rem 0;
+    display: inline-block;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.nav-menu a:hover {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
 }
 
 /* ----- メインコンテンツ ----- */
@@ -38,23 +150,13 @@ body {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
+    padding: 2rem 1.5rem;
 }
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-/* サイトタイトル */
-.site-title {
-    font-family: '游明朝', 'Yu Mincho', serif;
-    font-size: 2.5rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    color: var(--accent-color);
-    margin-bottom: 0.5rem;
-    text-align: center;
 }
 
 .subtitle {
@@ -197,7 +299,7 @@ body {
     margin: 1.5rem 0 2rem;
     border-left: 4px solid var(--accent-color);
     display: inline-block;
-    scroll-margin-top: 2rem;
+    scroll-margin-top: 5rem;
 }
 
 /* ----- フッター（コピーライトのみ） ----- */
@@ -223,7 +325,7 @@ body {
         letter-spacing: 12px;
     }
     .site-title {
-        font-size: 2rem;
+        font-size: 1.3rem;
     }
 }
 
