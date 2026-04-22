@@ -1,63 +1,73 @@
-# binary-omikuji Technical Summary
+# binary-omikuji テクニカルサマリー
 
-## 1. Overview
-- **Title**: binary-omikuji
-- **Release Date**: April 2026
-- **Public URL**: [https://shimataiyaki.github.io/binary-omikuji/]
-- **Repository**: [https://github.com/shimataiyaki/binary-omikuji]
+## 1. 概要
+- **名称**：binary-omikuji（二進数おみくじ）
+- **制作時期**：2026年4月
+- **公開URL**：[https://shimataiyaki.github.io/binary-omikuji/](https://shimataiyaki.github.io/binary-omikuji/)
+- **リポジトリ**：[https://github.com/shimataiyaki/binary-omikuji](https://github.com/shimataiyaki/binary-omikuji)
 
-## 2. Development Background
+## 2. 開発の背景
 
-### 2.1 Concept and Purpose
-- This project was developed as a **“personal project that can also be repurposed for club activity exhibitions”**.
-- While envisioning its use in exhibitions at cultural festivals for IT-related clubs, the priority was initially on refining the project’s quality as a personal portfolio.
-- Although actual operational testing is still pending, the design—which relies on a standalone static site and integrates with physical paper cards—is expected to prevent network overload and equipment malfunctions on the day of the event.
+### 2.1 着想と目的
+- 高校文化祭の「神社」をテーマにした展示に向けて、情報系部活に提供することを目的に開発された、**「来場者が自分の運勢を二進数で引き、部員との会話を生み出す」** 体験を狙った個人制作プロダクト。
+- 従来のおみくじとは異なり、**結果をあえて画面上に表示せず、二進数のみを提示する**ことで、部員が紙カードを手渡す際のコミュニケーションを必須とする設計を採用した。
+- GitHub Pagesによる静的サイト完結型とすることで、文化祭当日のネットワーク負荷やサーバートラブルを回避している。
 
-### 2.2 Prototyping Evolution
-- **V1 (Minimal Configuration)**: For verifying the technical feasibility of the concept
-- **v1 (Minor Update)**: A version with slight modifications to v1
-- **v3 (UI Homage)**: Implemented card designs inspired by the Japanese-style UI of Koi Mikuji v3.
-- **v4 (Minor Update)**: A version with minor changes to v3
+### 2.2 プロトタイプの変遷
+- **v0（画像ランダム版）**：動作確認用の簡易プロトタイプ。ランダムな画像表示のみ。
+- **v1（二進数コア版）**：二進数表示と紙カード連動の基本構造を確立。抽選ロジックと待機演出を実装。
+- **v2（UIオマージュ版）**：「恋みくじ v3」の和風UIを参考に、朱色の札・縦書き・ホバーアニメーションをCSSで再現。
+- **v3（運用最適化版）**：札の枚数を16枚に拡張し、レスポンシブ対応を強化。固定ヘッダーとハンバーガーメニューを追加。
+- **v4（機能拡張版）**：**リセットボタン（「次の方へ」）を追加**し、共用端末での連続利用をスムーズにした。抽選中であっても強制的に初期状態に戻せる設計。
 
-## 3. Technologies Used
-- **Frontend**: HTML5, CSS3, JavaScript (ES6)
-- **Hosting**: GitHub Pages
-- **Editor**: VS Code / Cursor (AI-assisted development)
-- **Design**: Hand-drawn sketches
+## 3. 使用技術
+- **フロントエンド**：HTML5、CSS3、JavaScript（ES6）
+- **ホスティング**：GitHub Pages
+- **エディタ**：VS Code / Cursor（AI支援開発）
+- **デザイン**：手書きラフ／Figma（一部）
 
-## 4. System Architecture Diagram
+## 4. システム構成図
 
-[Chromebook] → [GitHub Pages] → [Random draw in browser]
-↓
-[Club members hand out paper cards]
+[来場者のスマホ] → [GitHub Pages] → [ブラウザ上で抽選]
+                                    ↓
+                            [部員がコード表を照合]
+                                    ↓
+                            [紙のおみくじカードを手渡し]
 
-## 5. Technical Explanation
-## 5.1 Development Process and Lessons Learned
-- **Practicing Vibe Coding**: This project was created using the **Vibe Coding** approach, which involves coding through dialogue with AI. By shaping the impressions gained from the Love Fortune Telling UI through dialogue with AI, I confirmed that even as an individual developer, it is possible to achieve a high level of completion in a short period of time.
-### 5.2 Random Selection Logic
-- A simple random selection using JavaScript’s `Math.random()`.
-- Defined 16 types of binary numbers from `0000` to `1111` in an array.
-- **Anti-spam**: Disabled the button during the selection process and implemented a 2.5-second wait effect using `setTimeout`.
+## 5. 技術解説
 
-### 5.3 UI/UX (Homage to Koi mikuji: Love Fortune Telling)
-- **Card Design**: Achieved vertical text and hover animations using only CSS. Used `writing-mode: vertical-rl`.
-- **Responsive Design**: Used Flexbox to ensure cards wrap and center on mobile devices.
+### 5.1 開発プロセスと学び
+- **Vibe Coding の実践**：本作品は、AIとの対話を通じて要件の明確化・コード生成・デバッグを繰り返すスタイルで制作された。これにより、個人開発でも短期間で実用的なWebアプリを完成させられることを実証した。
+- **静的サイトの可能性**：サーバーサイドに依存しない設計により、運用コストゼロかつ高い可用性を実現。文化祭のような一時的なイベントに適したアーキテクチャであることを確認した。
 
-### 5.4 Operational Design
-- **Integration of Web and Physical Elements**: Fortune results are not displayed on the screen; only binary code is shown.
-- **Club members hand out paper cards based on a reference chart**, creating a mechanism that guarantees conversation.
+### 5.2 データフローと抽選ロジック
+- **抽選ロジック**：JavaScriptの `Math.random()` を用いて、事前に定義した16種類の二進数（`0000`～`1111`）から1つを等確率で選択。
+- **連打防止と状態管理**：抽選中は全札に `.disabled` クラスを付与し `pointer-events: none` とすることで、UIスレッドをロック。さらに `isDrawing` フラグによる二重防御を実装。
+- **リセット機能**：追加されたリセットボタンは、抽選中であっても `setTimeout` をキャンセルし、表示と札の状態を初期化する。これにより、共用端末（Chromebook等）で前の利用者の結果が残ることを防ぎ、スムーズな連続運用を可能にした。
 
-## 6. Development Challenges and Solutions
-| Challenge | Solution |
-| :--- | :--- |
-| Concerns about network load on the day of the event | Eliminated server-side processing and implemented a static site (GitHub Pages) |
-| Display issues on smartphones | Optimized font sizes using viewport settings and media queries |
+### 5.3 UI/UX（恋みくじオマージュ）
+- **札のデザイン**：CSSのみで縦書き（`writing-mode: vertical-rl`）とホバー時の浮遊感（`transform` と `box-shadow`）を実現。角丸を排除した長方形とすることで、和風ながら機能的な印象を与えている。
+- **レスポンシブ対応**：Flexboxによる流動的レイアウトを採用し、画面幅に応じて札が折り返す設計。モバイルでも快適に操作できる。
 
-## 6. Future Outlook
-- Through the actual cultural festival exhibition, we plan to identify operational challenges (such as paper card inventory management and optimal wait times) and work on improvements.
-- Omikuji result aggregation feature (integrated with Google Apps Script)
+### 5.4 運用設計
+- **Webと物理の融合**：画面上には二進数のみを表示し、運勢（大吉・吉など）は一切表示しない。来場者は必ず部員に数字を伝える必要があり、これにより自然なコミュニケーションが発生する。
+- **学校ICT環境への適合**：特別なアプリやソフトウェアのインストールは不要で、QRコードを読み取るだけで利用可能。学校支給のChromebookからもアクセスできる。
 
-## 7. Acknowledgments / Inspiration
-- The UI for this project was independently implemented based on inspiration from “Koi Mikuji v3” [https://koi-mikuji.omikuji-do.com/v3/].
+## 6. 開発中の課題と解決策
 
-Translated with DeepL.com (free version)
+| 課題 | 解決策 |
+|:---|:---|
+| 共用端末での連続利用時に前の結果が残る | リセットボタンを実装し、抽選中・結果表示中を問わず即時初期化できるようにした |
+| 当日のネットワーク負荷が心配 | サーバーサイド処理を排除し、GitHub Pagesによる静的サイト完結型を採用 |
+| スマホでの表示崩れ | ビューポート設定とメディアクエリによりフォントサイズ・札サイズを最適化 |
+
+## 7. 今後の展望
+- 実際の文化祭展示を通じて、来場者のフィードバックや運営上の課題（紙カード在庫管理、待機時間の適正値など）を収集し、改善を図る予定。
+- 効果音（鈴の音）の再生機能や、おみくじ結果の簡易集計機能（Google Apps Script連携）の追加を検討中。
+
+## 8. 謝辞／リスペクト
+- 本作品のUIは「[恋みくじ v3](https://koi-mikuji.omikuji-do.com/v3/)」へのリスペクトに基づき、独自に実装したものです。
+
+---
+
+© 2026 Shimataiyaki
