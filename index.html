@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <!-- 固定ヘッダー（復活） -->
+    <!-- 固定ヘッダー -->
     <header class="site-header">
         <div class="header-container">
             <a href="./" class="site-title">デジタルおみくじ</a>
@@ -41,23 +41,30 @@
             <!-- おみくじ札 16枚（JavaScriptで生成） -->
             <div class="cards-grid" id="cardsGrid"></div>
 
-            <!-- 抽選結果表示スペース -->
-            <div class="result-area">
-                <div id="binary-display">
-                    <span id="binary-number">----</span>
-                    <span id="binary-suffix"></span>
+            <!-- 抽選中メッセージ -->
+            <div class="waiting-area" id="waitingMessage"></div>
+
+            <!-- 遊び方セクション -->
+            <div class="guide-section">
+                <div class="guide-text">
+                    ▶ 札を選んでタップしてください
                 </div>
-                <div id="waiting-message" class="waiting-text"></div>
-                <!-- リセットボタン -->
-                <button id="resetButton" class="reset-button">リセット</button>
             </div>
 
-            <!-- 案内文（遊び方アンカー） -->
-            <div id="howto" class="guide-text">
-                ▶ 表示された数字を部員に見せて、おみくじの紙を受け取ってください。
+            <!-- ポップアップ（モーダル） -->
+            <div id="resultModal" class="modal">
+                <div class="modal-content">
+                    <span class="modal-close" id="modalClose">&times;</span>
+                    <div class="modal-title">抽選結果</div>
+                    <div id="modalNumber" class="modal-number">五</div>
+                    <div class="modal-unit">番</div>
+                    <div class="modal-guide">
+                        ▶ 表示された数字を部員に見せて、<br>　おみくじの紙を受け取ってください。
+                    </div>
+                </div>
             </div>
 
-            <!-- フッター（コピーライトのみ・リンクなし） -->
+            <!-- フッター（コピーライトのみ） -->
             <footer class="app-footer">
                 <span>© 2026 Shimataiyaki</span>
             </footer>
