@@ -1,10 +1,10 @@
-# binary-omikuji テクニカルサマリー
+# digital-omikuji テクニカルサマリー
 
 ## 1. 概要
-- **名称**：binary-omikuji（二進数おみくじ）
+- **名称**：digital-omikuji（デジタルおみくじ）
 - **制作時期**：2026年4月
-- **公開URL**：[https://shimataiyaki.github.io/binary-omikuji/](https://shimataiyaki.github.io/binary-omikuji/)
-- **リポジトリ**：[https://github.com/shimataiyaki/binary-omikuji](https://github.com/shimataiyaki/binary-omikuji)
+- **公開URL**：[https://shimataiyaki.github.io/digital-omikuji/](https://shimataiyaki.github.io/digital-omikuji/)
+- **リポジトリ**：[https://github.com/shimataiyaki/digital-omikuji](https://github.com/shimataiyaki/digital-omikuji)
 
 ## 2. 開発の背景
 
