@@ -3,393 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>デジタルおみくじ｜インライン確認版</title>
-    <!-- ファビコン（任意） -->
+    <title>デジタルおみくじ e-mikuji</title>
+    <!-- ファビコン -->
     <link rel="icon" type="image/x-icon" href="https://shimataiyaki.github.io/images/favicon.ico">
-    <style>
-        /* ============================================
-           style.css 相当（インライン）
-           ============================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #1f2937;
-            --border-color: #e2e8f0;
-            --muted-text: #64748b;
-            --accent-color: #ad241f;
-            --card-bg: #c84b3f;
-            --card-text: #f9e076;
-        }
-
-        body {
-            font-family: '游明朝', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.8;
-            font-weight: 400;
-            padding-top: 5rem;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* ----- 固定ヘッダー ----- */
-        .site-header {
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: var(--bg-color);
-            border-bottom: 3px solid var(--accent-color);
-            z-index: 1000;
-        }
-
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0.75rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .site-title {
-            font-family: '游明朝', 'Yu Mincho', serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            color: #0f172a;
-            text-decoration: none;
-        }
-
-        .site-title:hover {
-            color: var(--accent-color);
-        }
-
-        /* ハンバーガーボタン */
-        .menu-toggle {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            width: 32px;
-            height: 28px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .menu-toggle span {
-            width: 100%;
-            height: 3px;
-            background: var(--accent-color);
-            transition: all 0.3s;
-        }
-
-        .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -7px);
-        }
-
-        /* ナビメニュー */
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1.5rem 0;
-            margin: 0;
-            list-style: none;
-            z-index: 999;
-        }
-
-        .nav-menu.show {
-            display: block;
-        }
-
-        .nav-menu-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .nav-menu li {
-            list-style: none;
-        }
-
-        .nav-menu a {
-            font-family: '游明朝', 'Yu Mincho', serif;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.2rem 0;
-            display: inline-block;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.2s, color 0.2s;
-        }
-
-        .nav-menu a:hover {
-            color: var(--accent-color);
-            border-bottom-color: var(--accent-color);
-        }
-
-        /* ----- メインコンテンツ ----- */
-        .app-main {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .subtitle {
-            font-family: '游明朝', 'Yu Mincho', serif;
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--accent-color);
-            margin: 0 0 2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent-color);
-            display: inline-block;
-        }
-
-        /* ----- おみくじ札 ----- */
-        .cards-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 20px 30px;
-            margin: 0 0 2rem;
-            max-width: 1000px;
-        }
-
-        .omikuji-card {
-            width: 90px;
-            height: 140px;
-            background-color: var(--card-bg);
-            color: var(--card-text);
-            border-radius: 0;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            font-family: '游明朝', 'Yu Mincho', serif;
-            font-size: 22px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            user-select: none;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .omikuji-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
-        }
-
-        .omikuji-card.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-            filter: grayscale(0.2);
-            transform: translateY(2px);
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
-        }
-
-        /* 抽選中メッセージ */
-        .waiting-area {
-            min-height: 2.5rem;
-            margin: 0.5rem 0;
-            font-size: 1.2rem;
-            color: var(--accent-color);
-        }
-
-        /* ----- 遊び方セクション ----- */
-        .guide-section {
-            margin: 1.5rem 0 0;
-            display: inline-block;
-            text-align: left;
-        }
-
-        .guide-text {
-            font-size: 1rem;
-            color: var(--text-color);
-            background: none;
-            padding: 0.5rem 0 0.5rem 1.2rem;
-            border-left: 4px solid var(--accent-color);
-        }
-
-        /* ----- ポップアップ（モーダル） ----- */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.2);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #ffffff;
-            border: none;
-            border-radius: 40px;
-            padding: 2rem 2rem 2.5rem;
-            max-width: 550px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 24px;
-            font-size: 36px;
-            font-weight: 300;
-            color: var(--text-color);
-            cursor: pointer;
-            line-height: 1;
-            transition: color 0.2s;
-            z-index: 10;
-        }
-
-        .modal-close:hover {
-            color: var(--accent-color);
-        }
-
-        .modal-title {
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: var(--accent-color);
-            letter-spacing: 4px;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-        }
-
-        .modal-number {
-            font-family: '游明朝', 'Yu Mincho', serif;
-            font-size: 120px;
-            font-weight: 600;
-            color: var(--text-color);
-            line-height: 1.3;
-            margin: 0.5rem 0 0.25rem;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 0.1em;
-            display: inline-block;
-        }
-
-        .modal-unit {
-            font-size: 1.5rem;
-            color: var(--muted-text);
-            margin-top: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 400;
-        }
-
-        .modal-guide {
-            font-size: 1rem;
-            color: var(--text-color);
-            background: none;
-            padding: 0.5rem 0 0.5rem 1.2rem;
-            border-left: 4px solid var(--accent-color);
-            display: inline-block;
-            text-align: left;
-            margin-top: 0.5rem;
-        }
-
-        /* ----- フッター ----- */
-        .app-footer {
-            margin-top: 2rem;
-            text-align: center;
-            color: var(--muted-text);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1.5rem;
-            width: 100%;
-        }
-
-        /* レスポンシブ */
-        @media (max-width: 800px) {
-            .omikuji-card {
-                width: 70px;
-                height: 110px;
-                font-size: 18px;
-            }
-            .site-title {
-                font-size: 1.3rem;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .modal-content {
-                padding: 1.5rem 1rem;
-                border-radius: 30px;
-            }
-            .modal-number {
-                font-size: 80px;
-            }
-            .modal-title {
-                font-size: 1.2rem;
-            }
-            .modal-unit {
-                font-size: 1.2rem;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .cards-grid {
-                gap: 12px;
-            }
-            .subtitle {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    <link rel="shortcut icon" type="image/x-icon" href="https://shimataiyaki.github.io/images/favicon.ico">
+    <link rel="apple-touch-icon" href="https://shimataiyaki.github.io/images/favicon.ico">
+    <!-- 外部CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- 固定ヘッダー -->
     <header class="site-header">
         <div class="header-container">
-            <a href="./" class="site-title">デジタルおみくじ</a>
+            <div class="site-title-wrapper">
+                <a href="./" class="site-title">デジタルおみくじ</a>
+                <span class="site-subtitle">e-mikuji</span>
+            </div>
             <button class="menu-toggle" id="menuToggle" aria-label="メニュー" aria-expanded="false">
                 <span></span>
                 <span></span>
@@ -411,12 +41,6 @@
             <!-- 見出し -->
             <div class="subtitle">おみくじを引く</div>
 
-            <!-- おみくじ札 16枚（JSで生成） -->
-            <div class="cards-grid" id="cardsGrid"></div>
-
-            <!-- 抽選中メッセージ -->
-            <div class="waiting-area" id="waitingMessage"></div>
-
             <!-- 遊び方セクション -->
             <div class="guide-section" id="howto">
                 <div class="guide-text">
@@ -424,7 +48,13 @@
                 </div>
             </div>
 
-            <!-- ポップアップ（モーダル）初期値は空 -->
+            <!-- おみくじ札 16枚（JavaScriptで生成） -->
+            <div class="cards-grid" id="cardsGrid"></div>
+
+            <!-- 抽選中メッセージ -->
+            <div class="waiting-area" id="waitingMessage"></div>
+
+            <!-- ポップアップ（モーダル） -->
             <div id="resultModal" class="modal">
                 <div class="modal-content">
                     <span class="modal-close" id="modalClose">&times;</span>
@@ -432,193 +62,19 @@
                     <div id="modalNumber" class="modal-number"></div>
                     <div class="modal-unit">番</div>
                     <div class="modal-guide">
-                        ▶ 表示された数字を部員に見せて、<br>　おみくじの紙を受け取ってください。
+                        ▶ 表示された数字に対応する、<br>　おみくじの紙を受け取ってください。
                     </div>
                 </div>
             </div>
 
-            <!-- フッター -->
+            <!-- フッター（コピーライトのみ） -->
             <footer class="app-footer">
                 <span>© 2026 Shimataiyaki</span>
             </footer>
         </div>
     </main>
 
-    <script>
-        /* ============================================
-           script.js 相当（インライン）
-           ============================================ */
-        (function() {
-            'use strict';
-
-            // 抽選データ（漢数字：一～十六）
-            const NUMBER_LIST = [
-                "一", "二", "三", "四",
-                "五", "六", "七", "八",
-                "九", "十", "十一", "十二",
-                "十三", "十四", "十五", "十六"
-            ];
-            const WAIT_TIME = 2500;     // 2.5秒
-            const CARD_COUNT = 16;
-
-            // DOM要素
-            const cardsGrid = document.getElementById('cardsGrid');
-            const waitingMsg = document.getElementById('waitingMessage');
-            const modal = document.getElementById('resultModal');
-            const modalNumber = document.getElementById('modalNumber');
-            const modalClose = document.getElementById('modalClose');
-
-            let isDrawing = false;
-            let timeoutId = null;
-            let autoCloseTimer = null;
-
-            // ---------- 札を16枚生成 ----------
-            function buildCards() {
-                cardsGrid.innerHTML = '';
-                for (let i = 0; i < CARD_COUNT; i++) {
-                    const card = document.createElement('div');
-                    card.className = 'omikuji-card';
-                    card.textContent = 'おみくじ';
-                    card.addEventListener('click', onCardClick);
-                    cardsGrid.appendChild(card);
-                }
-            }
-
-            function onCardClick() {
-                if (isDrawing) return;
-                startDrawing();
-            }
-
-            // ---------- 抽選開始 ----------
-            function startDrawing() {
-                isDrawing = true;
-
-                const allCards = document.querySelectorAll('.omikuji-card');
-                allCards.forEach(c => c.classList.add('disabled'));
-
-                waitingMsg.textContent = '抽選中・・・';
-
-                const randomIndex = Math.floor(Math.random() * NUMBER_LIST.length);
-                const selected = NUMBER_LIST[randomIndex];
-
-                timeoutId = setTimeout(() => {
-                    modalNumber.textContent = selected;
-                    waitingMsg.textContent = '';
-                    showModal();
-                    timeoutId = null;
-                }, WAIT_TIME);
-            }
-
-            // ---------- ポップアップ表示 ----------
-            function showModal() {
-                if (!modal) return;
-                modal.classList.add('show');
-
-                if (autoCloseTimer) clearTimeout(autoCloseTimer);
-                autoCloseTimer = setTimeout(() => {
-                    resetEverything();
-                }, 5000);
-            }
-
-            // ---------- リセット処理 ----------
-            function resetEverything() {
-                if (timeoutId) {
-                    clearTimeout(timeoutId);
-                    timeoutId = null;
-                }
-                if (autoCloseTimer) {
-                    clearTimeout(autoCloseTimer);
-                    autoCloseTimer = null;
-                }
-                waitingMsg.textContent = '';
-                isDrawing = false;
-                const allCards = document.querySelectorAll('.omikuji-card');
-                allCards.forEach(c => c.classList.remove('disabled'));
-                if (modal) modal.classList.remove('show');
-            }
-
-            // ---------- ハンバーガーメニュー制御 ----------
-            function setupMobileMenu() {
-                const toggleBtn = document.getElementById('menuToggle');
-                const navMenu = document.getElementById('navMenu');
-                if (!toggleBtn || !navMenu) return;
-
-                toggleBtn.addEventListener('click', function() {
-                    navMenu.classList.toggle('show');
-                    this.classList.toggle('active');
-                    const expanded = navMenu.classList.contains('show');
-                    this.setAttribute('aria-expanded', expanded);
-                });
-
-                document.addEventListener('click', function(e) {
-                    if (!toggleBtn.contains(e.target) && !navMenu.contains(e.target)) {
-                        navMenu.classList.remove('show');
-                        toggleBtn.classList.remove('active');
-                        toggleBtn.setAttribute('aria-expanded', 'false');
-                    }
-                });
-
-                navMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navMenu.classList.remove('show');
-                        toggleBtn.classList.remove('active');
-                        toggleBtn.setAttribute('aria-expanded', 'false');
-                    });
-                });
-            }
-
-            // ---------- スムーススクロール ----------
-            function setupSmoothScroll() {
-                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                    anchor.addEventListener('click', function(e) {
-                        const href = this.getAttribute('href');
-                        if (href === '#howto') {
-                            e.preventDefault();
-                            const target = document.querySelector('#howto');
-                            if (target) {
-                                target.scrollIntoView({ behavior: 'smooth' });
-                            }
-                        }
-                    });
-                });
-            }
-
-            // ---------- 初期化 ----------
-            function init() {
-                buildCards();
-                waitingMsg.textContent = '';
-
-                setupMobileMenu();
-                setupSmoothScroll();
-
-                if (modalClose) {
-                    modalClose.addEventListener('click', resetEverything);
-                }
-
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        resetEverything();
-                    }
-                });
-
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && modal.classList.contains('show')) {
-                        resetEverything();
-                    }
-                });
-
-                window.addEventListener('beforeunload', () => {
-                    if (timeoutId) clearTimeout(timeoutId);
-                    if (autoCloseTimer) clearTimeout(autoCloseTimer);
-                });
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
-        })();
-    </script>
+    <!-- 外部JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
