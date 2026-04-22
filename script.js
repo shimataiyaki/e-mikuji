@@ -1,30 +1,31 @@
 /* ============================================
    script.js - デジタルおみくじ 最終版
-   固定ヘッダー + 16枚札 + リセットボタン
+   固定ヘッダー + 16枚札 + ポップアップ統合
    ============================================ */
 
 (function() {
     'use strict';
 
-    // ---------- 抽選データ ----------
+    // 抽選データ（漢数字：一～十六）
     const NUMBER_LIST = [
-        "〇一", "〇二", "〇三", "〇四",
-        "〇五", "〇六", "〇七", "〇八",
-        "〇九", "一〇", "一一", "一二",
-        "一三", "一四", "一五", "一六"
+        "一", "二", "三", "四",
+        "五", "六", "七", "八",
+        "九", "十", "十一", "十二",
+        "十三", "十四", "十五", "十六"
     ];
     const WAIT_TIME = 2500;     // 2.5秒
-    const CARD_COUNT = 16;      // 16枚
+    const CARD_COUNT = 16;
 
     // DOM要素
     const cardsGrid = document.getElementById('cardsGrid');
-    const binaryNumber = document.getElementById('binary-number');   // IDはそのまま
-    const binarySuffix = document.getElementById('binary-suffix'); // IDはそのまま
-    const waitingMsg = document.getElementById('waiting-message');
-    const resetButton = document.getElementById('resetButton');
+    const waitingMsg = document.getElementById('waitingMessage');
+    const modal = document.getElementById('resultModal');
+    const modalNumber = document.getElementById('modalNumber');
+    const modalClose = document.getElementById('modalClose');
 
     let isDrawing = false;
     let timeoutId = null;
+    let autoCloseTimer = null;
 
     // ---------- 札を16枚生成 ----------
     function buildCards() {
@@ -33,14 +34,12 @@
             const card = document.createElement('div');
             card.className = 'omikuji-card';
             card.textContent = 'おみくじ';
-            card.setAttribute('data-index', i);
             card.addEventListener('click', onCardClick);
             cardsGrid.appendChild(card);
         }
     }
 
-    // ---------- 札クリック ----------
-    function onCardClick(e) {
+    function onCardClick() {
         if (isDrawing) return;
         startDrawing();
     }
@@ -50,49 +49,47 @@
         isDrawing = true;
 
         const allCards = document.querySelectorAll('.omikuji-card');
-        allCards.forEach(card => card.classList.add('disabled'));
+        allCards.forEach(c => c.classList.add('disabled'));
 
-        binaryNumber.textContent = '';
-        binarySuffix.textContent = '';
         waitingMsg.textContent = '抽選中・・・';
 
         const randomIndex = Math.floor(Math.random() * NUMBER_LIST.length);
-        const selectedNumber = NUMBER_LIST[randomIndex];
+        const selected = NUMBER_LIST[randomIndex];
 
         timeoutId = setTimeout(() => {
-            binaryNumber.textContent = selectedNumber;
-            binarySuffix.textContent = '番';
+            modalNumber.textContent = selected;
             waitingMsg.textContent = '';
-
-            allCards.forEach(card => card.classList.remove('disabled'));
-            isDrawing = false;
+            showModal();
             timeoutId = null;
         }, WAIT_TIME);
     }
 
+    // ---------- ポップアップ表示 ----------
+    function showModal() {
+        if (!modal) return;
+        modal.classList.add('show');
+
+        if (autoCloseTimer) clearTimeout(autoCloseTimer);
+        autoCloseTimer = setTimeout(() => {
+            resetEverything();
+        }, 5000);
+    }
+
     // ---------- リセット処理 ----------
-    function resetDisplay() {
-        // タイマー解除
+    function resetEverything() {
         if (timeoutId) {
             clearTimeout(timeoutId);
             timeoutId = null;
         }
-        // 表示を初期化
-        binaryNumber.textContent = '----';
-        binarySuffix.textContent = '';
+        if (autoCloseTimer) {
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = null;
+        }
         waitingMsg.textContent = '';
-        // フラグ解除
         isDrawing = false;
-        // 全札を有効化
         const allCards = document.querySelectorAll('.omikuji-card');
-        allCards.forEach(card => card.classList.remove('disabled'));
-    }
-
-    // ---------- 初期表示 ----------
-    function initializeDisplay() {
-        binaryNumber.textContent = '----';
-        binarySuffix.textContent = '';
-        waitingMsg.textContent = '';
+        allCards.forEach(c => c.classList.remove('disabled'));
+        if (modal) modal.classList.remove('show');
     }
 
     // ---------- ハンバーガーメニュー制御 ----------
@@ -108,7 +105,6 @@
             this.setAttribute('aria-expanded', expanded);
         });
 
-        // メニュー外クリックで閉じる
         document.addEventListener('click', function(e) {
             if (!toggleBtn.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('show');
@@ -117,7 +113,6 @@
             }
         });
 
-        // メニュー内リンクをタップしたら閉じる
         navMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('show');
@@ -146,16 +141,30 @@
     // ---------- 初期化 ----------
     function init() {
         buildCards();
-        initializeDisplay();
+        waitingMsg.textContent = '';
+
         setupMobileMenu();
         setupSmoothScroll();
 
-        if (resetButton) {
-            resetButton.addEventListener('click', resetDisplay);
+        if (modalClose) {
+            modalClose.addEventListener('click', resetEverything);
         }
 
-        window.addEventListener('beforeunload', function() {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                resetEverything();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                resetEverything();
+            }
+        });
+
+        window.addEventListener('beforeunload', () => {
             if (timeoutId) clearTimeout(timeoutId);
+            if (autoCloseTimer) clearTimeout(autoCloseTimer);
         });
     }
 
