@@ -1,6 +1,7 @@
 /* ============================================
    script.js - デジタルおみくじ（e-mikuji）本番版
    固定ヘッダー + 16枚札 + ポップアップ統合
+   ※自動消滅なし
    ============================================ */
 
 (function() {
@@ -25,7 +26,7 @@
 
     let isDrawing = false;
     let timeoutId = null;
-    let autoCloseTimer = null;
+    // 自動消滅タイマーは廃止
 
     // ---------- 札を16枚生成 ----------
     function buildCards() {
@@ -64,15 +65,11 @@
         }, WAIT_TIME);
     }
 
-    // ---------- ポップアップ表示 ----------
+    // ---------- ポップアップ表示（自動消滅なし） ----------
     function showModal() {
         if (!modal) return;
         modal.classList.add('show');
-
-        if (autoCloseTimer) clearTimeout(autoCloseTimer);
-        autoCloseTimer = setTimeout(() => {
-            resetEverything();
-        }, 5000);
+        // 自動消滅タイマーは設定しない
     }
 
     // ---------- リセット処理 ----------
@@ -81,10 +78,7 @@
             clearTimeout(timeoutId);
             timeoutId = null;
         }
-        if (autoCloseTimer) {
-            clearTimeout(autoCloseTimer);
-            autoCloseTimer = null;
-        }
+        // 自動消滅タイマーのクリアは不要
         waitingMsg.textContent = '';
         isDrawing = false;
         const allCards = document.querySelectorAll('.omikuji-card');
@@ -164,7 +158,6 @@
 
         window.addEventListener('beforeunload', () => {
             if (timeoutId) clearTimeout(timeoutId);
-            if (autoCloseTimer) clearTimeout(autoCloseTimer);
         });
     }
 
