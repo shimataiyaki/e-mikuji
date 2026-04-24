@@ -1,7 +1,7 @@
 /* ============================================
-   script.js - デジタルおみくじ（e-mikuji）本番版
+   script.js - デジタルおみくじ（E-LOTs）本番版
    固定ヘッダー + 16枚札 + ポップアップ統合
-   ※自動消滅なし
+   抽選中横書き + 結果縦書き
    ============================================ */
 
 (function() {
@@ -19,14 +19,15 @@
 
     // DOM要素
     const cardsGrid = document.getElementById('cardsGrid');
-    const waitingMsg = document.getElementById('waitingMessage');
     const modal = document.getElementById('resultModal');
+    const modalTitle = document.getElementById('modalTitle');
     const modalNumber = document.getElementById('modalNumber');
+    const modalUnit = document.getElementById('modalUnit');
+    const modalGuide = document.getElementById('modalGuide');
     const modalClose = document.getElementById('modalClose');
 
     let isDrawing = false;
     let timeoutId = null;
-    // 自動消滅タイマーは廃止
 
     // ---------- 札を16枚生成 ----------
     function buildCards() {
@@ -52,24 +53,26 @@
         const allCards = document.querySelectorAll('.omikuji-card');
         allCards.forEach(c => c.classList.add('disabled'));
 
-        waitingMsg.textContent = '抽選中・・・';
+        // ポップアップを抽選中モードで表示
+        modalTitle.textContent = '抽選中';
+        modalNumber.textContent = '抽選中…';
+        modalNumber.classList.add('horizontal');   // 横書きに
+        modalUnit.textContent = '';
+        modalGuide.textContent = '';
+        modal.classList.add('show');
 
         const randomIndex = Math.floor(Math.random() * NUMBER_LIST.length);
         const selected = NUMBER_LIST[randomIndex];
 
         timeoutId = setTimeout(() => {
+            // 結果表示に切り替え
+            modalTitle.textContent = '抽選結果';
             modalNumber.textContent = selected;
-            waitingMsg.textContent = '';
-            showModal();
+            modalNumber.classList.remove('horizontal'); // 縦書きに戻す
+            modalUnit.textContent = '番';
+            modalGuide.textContent = '▶ 表示された数字を部員に見せて、おみくじの紙を受け取ってください。';
             timeoutId = null;
         }, WAIT_TIME);
-    }
-
-    // ---------- ポップアップ表示（自動消滅なし） ----------
-    function showModal() {
-        if (!modal) return;
-        modal.classList.add('show');
-        // 自動消滅タイマーは設定しない
     }
 
     // ---------- リセット処理 ----------
@@ -78,12 +81,10 @@
             clearTimeout(timeoutId);
             timeoutId = null;
         }
-        // 自動消滅タイマーのクリアは不要
-        waitingMsg.textContent = '';
         isDrawing = false;
         const allCards = document.querySelectorAll('.omikuji-card');
         allCards.forEach(c => c.classList.remove('disabled'));
-        if (modal) modal.classList.remove('show');
+        modal.classList.remove('show');
     }
 
     // ---------- ハンバーガーメニュー制御 ----------
@@ -135,8 +136,6 @@
     // ---------- 初期化 ----------
     function init() {
         buildCards();
-        waitingMsg.textContent = '';
-
         setupMobileMenu();
         setupSmoothScroll();
 
